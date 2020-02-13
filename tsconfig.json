@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "strict": true,
+    "module": "es6",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "strictPropertyInitialization": false,
+    "strictNullChecks": true,
+  }
+}
