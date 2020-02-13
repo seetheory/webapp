@@ -2,6 +2,12 @@
   <div class="wrapper">
     <div class="title">
       Connecting to websocket
+      <br />
+      <input type="text" v-model="command" v-on:keypress="this.textchanged" />
+      <br />
+      <div style="font-size:20">
+        {{status}}
+      </div>
     </div>
   </div>
 </template>
@@ -14,7 +20,28 @@ import Component from 'vue-class-component'
   name: 'App'
 })
 export default class App extends Vue {
-
+  status = ''
+  command = ''
+  ws: WebSocket
+  mounted() {
+    this.ws = new WebSocket('ws://127.0.0.1:4000')
+    this.ws.onclose = () => {
+      this.status = 'closed'
+    }
+    this.ws.onmessage = ({ data }: any) => {
+      this.status = `Received: ${data}`
+    }
+    this.ws.onopen = () => {
+      this.status = 'connected'
+    }
+  }
+  textchanged(e: any) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (this.command) this.ws.send(this.command)
+      this.command = ''
+    }
+  }
 }
 </script>
 
