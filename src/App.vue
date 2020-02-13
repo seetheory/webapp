@@ -9,9 +9,7 @@
         <div style="width: 10px;" />
         <Auth />
         <div style="width: 10px;" />
-        <div>
-          Another thingy
-        </div>
+        <Sessions v-if="$store.state.socket.ws" />
       </div>
     </div>
   </div>
@@ -23,10 +21,11 @@ import Component from 'vue-class-component'
 import uuid from 'uuid'
 import Shell from './Shell.vue'
 import Auth from './Auth.vue'
+import Sessions from './Sessions.vue'
 
 @Component({
   name: 'App',
-  components: { Shell, Auth }
+  components: { Shell, Auth, Sessions }
 })
 export default class App extends Vue {
   mounted() {

@@ -1,5 +1,4 @@
 import uuid from 'uuid'
-import Vuex from 'vuex'
 
 interface Response {
   _rid: string,
@@ -15,6 +14,7 @@ export default {
     ws: undefined,
     log: [] as Response[],
     user: {},
+    token: '',
   },
   getters: {
     connected: (state: any) => !!state.ws,
@@ -70,7 +70,7 @@ export default {
       }
       let startIndex = state.log.length
       state.ws.send(JSON.stringify(payload))
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 15; i++) {
         await new Promise(r => setTimeout(r, 200))
         const responses = state.log.slice(startIndex)
         for (const res of responses) {
@@ -78,7 +78,7 @@ export default {
             return res
           }
         }
-        startIndex = state.log.length
+        startIndex = state.log.length-1
       }
       throw new Error('Timed out')
     },

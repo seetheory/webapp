@@ -1,5 +1,8 @@
 <template>
   <div class="outer">
+    <div style="font-size: 20px;">
+      Login or register
+    </div>
     <div style="display: flex; margin-top: 4px;">
       <input style="flex: 1" type="text" placeholder="username" v-model="username" v-on:keydown="keydown" />
     </div>
@@ -31,29 +34,29 @@ export default class Auth extends Vue {
   password = ''
 
   async login() {
-    const res = await this.$store.dispatch('send', {
+    const { data } = await this.$store.dispatch('send', {
       func: 'user.login',
       data: {
         username: this.username,
         password: this.password
       }
     })
-    this.$store.commit('setToken', res.data.token)
+    this.$store.commit('setToken', data.token)
     await this.$store.dispatch('loadUser')
     this.username = ''
     this.password = ''
   }
 
   async register() {
-    const res = await this.$store.dispatch('send', {
+    const { data } = await this.$store.dispatch('send', {
       func: 'user.create',
       data: {
         username: this.username,
         password: this.password
       }
     })
+    this.$store.commit('setToken', data.token)
     await this.$store.dispatch('loadUser')
-    this.$store.commit('setToken', res.data.token)
     this.username = ''
     this.password = ''
   }
