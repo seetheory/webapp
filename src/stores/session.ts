@@ -19,5 +19,4 @@ export default {
       state.sessions = data
     }
   },
-  namespace: true
 }
