@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper">
     <div class="title">
-      Connecting to websocket
+      Livetime Connection
       <br />
-      <input type="text" v-model="func" v-on:keydown="this.textchanged" />
-      <input type="text" v-model="data" v-on:keydown="this.textchanged" />
+      <input type="text" placeholder="func" v-model="func" v-on:keydown="this.textchanged" />
+      <input type="text" placeholder="data" v-model="data" v-on:keydown="this.textchanged" />
       <br />
       <div class="log">
         <div class="logline" v-for="line in log">
@@ -33,18 +33,35 @@ export default class App extends Vue {
     _rid: '',
   }
   ws: WebSocket
+  reconnectTimer: any
+
   mounted() {
+    this.connect()
+  }
+
+  connect() {
     this.ws = new WebSocket('ws://127.0.0.1:4000')
-    this.ws.onclose = () => {
-      this.log.push('disconnected')
-    }
     this.ws.onmessage = ({ data }: any) => {
       const pretty = JSON.stringify(JSON.parse(data), null, 4)
       this.log.push(`Received: ${pretty}`)
     }
     this.ws.onopen = () => {
       this.log.push('connected')
+      clearInterval(this.reconnectTimer)
+      this.reconnectTimer = undefined
     }
+    this.ws.onclose = () => {
+      this.log.push('disconnected')
+      delete this.ws
+      this.reconnectTimer = setInterval(() => {
+        this.connect()
+      }, 2000)
+    }
+  }
+
+  beforeDestroy() {
+    this.ws.close()
+    clearInterval(this.reconnectTimer)
   }
 
   textchanged(e: any) {
@@ -64,7 +81,7 @@ export default class App extends Vue {
     }
     if (e.key === 'ArrowUp') {
       this.func = this.lastPayload.func
-      this.data = this.lastPayload.data
+      this.data = JSON.parse(this.lastPayload.data)
     }
   }
 }
