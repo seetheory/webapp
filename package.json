@@ -11,6 +11,8 @@
   "author": "seetheory",
   "license": "ISC",
   "dependencies": {
+    "@types/uuid": "^3.4.7",
+    "uuid": "^3.4.0",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.2",
     "vue-router": "^3.1.5",
